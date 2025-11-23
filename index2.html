@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สุขสันต์วันครบรอบ 1 เดือนน้า 💗</title>
+<style>
+    /* ตั้งค่าเริ่มต้น */
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: white;
+        transition: background 1.5s ease;
+        font-family: "Prompt", sans-serif;
+        text-align: center;
+    }
+
+    /* สไตล์ปุ่ม */
+    #startBtn, #moreBtn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 30px;
+        font-size: 22px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.1s;
+    }
+
+    #startBtn { background: #ff7bd5; display: block; }
+    #moreBtn { background: #ff4fab; display: none; }
+
+    #startBtn:active, #moreBtn:active {
+        transform: translate(-50%, -50%) scale(0.98);
+    }
+
+    /* กล่องข้อความ */
+    #message {
+        position: absolute;
+        top: 55%;
+        width: 100%;
+        text-align: center;
+        font-size: 40px;
+        font-weight: bold;
+        color: #ff3e9e;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+        z-index: 10;
+    }
+
+    /* รูปภาพหลักสำหรับ Fade In/Out และรูปสุดท้าย (ku.jpg) */
+    #mainImage {
+        position: absolute;
+        top: 40%; 
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px; 
+        height: 300px; 
+        object-fit: contain;
+        opacity: 0; /* ซ่อนไว้ในตอนแรก */
+        transition: opacity 1.5s ease-in-out; 
+        z-index: 9; 
+    }
+
+    /* Emoji ที่ร่วงลงมา */
+    .emoji {
+        position: fixed;
+        top: -50px;
+        font-size: 40px;
+        animation: fall 3s linear forwards;
+        pointer-events: none;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<button id="startBtn">สุขสันต์วันครบรอบ 1 เดือนน้า 💗</button>
+<button id="moreBtn">กดอีกๆๆๆๆ 💞</button>
+
+<div id="message"></div>
+
+<img id="mainImage" src="" alt="Changing Image">
+
+<audio id="bgm" src="raoCOC.mp3" loop></audio>
+
+<script>
+    const startBtn = document.getElementById("startBtn");
+    const moreBtn = document.getElementById("moreBtn");
+    const message = document.getElementById("message");
+    const bgm = document.getElementById("bgm");
+    const mainImage = document.getElementById("mainImage");
+
+    // ฟังก์ชันสร้าง Emoji ร่วง
+    function spawnEmojis() {
+        const emojis = ["💖","💗","💞","💕","💘","✨","🌸","💓","🐷","🌹","💐","🌷",];
+        for (let i = 0; i < 80; i++) {
+            let e = document.createElement("div");
+            e.classList.add("emoji");
+            e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            e.style.left = Math.random() * 100 + "vw";
+            e.style.fontSize = (30 + Math.random() * 25) + "px";
+            e.style.animationDuration = (2.5 + Math.random() * 2) + "s";
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 4000);
+        }
+    }
+    
+    // ฟังก์ชันเปลี่ยนรูปภาพ
+    function changeImage(src, isPermanent = false) {
+        if (!src) {
+            mainImage.style.opacity = 0;
+            return;
+        }
+        
+        // ถ้าไม่ใช่รูปค้าง ให้ Fade Out รูปเก่าก่อน
+        if (!isPermanent) {
+            mainImage.style.opacity = 0;
+        }
+
+        // รอให้ Fade Out เสร็จก่อนค่อยเปลี่ยน src และ Fade In
+        setTimeout(() => {
+            mainImage.src = src;
+            mainImage.style.opacity = 1;
+        }, 10); // หน่วงเวลาเล็กน้อยเพื่อให้ transition ทำงาน
+
+        // ถ้าเป็นรูปถาวร (ku.jpg) ให้คง opacity ไว้ 1
+        if (isPermanent) {
+            mainImage.style.opacity = 1;
+        }
+    }
+
+    // === ขั้นตอนที่ 1: เมื่อกดปุ่ม START ===
+    startBtn.onclick = () => {
+        spawnEmojis();
+        startBtn.style.display = "none";
+        message.innerHTML = "สุขสันต์วันครบรอบ 1 เดือนน้า 💗";
+        message.style.opacity = 1;
+
+        setTimeout(() => { moreBtn.style.display = "block"; }, 1800);
+    };
+
+    // === ขั้นตอนที่ 2: เมื่อกดปุ่ม MORE (เริ่มเล่นเพลง, แสดงรูป, และข้อความยาว) ===
+    moreBtn.onclick = () => {
+        message.style.opacity = 0;
+        moreBtn.style.display = "none";
+        document.body.style.background = "#ffd6ec"; 
+
+        // 1. เล่นเพลงทันที
+        bgm.play().catch(error => {
+            console.log("Audio playback failed:", error);
+        }); 
+
+        const texts = [
+            "สุขสันต์วันเกิดและวันครบรอบ 1 เดือนนะคะ", // 0: cake.png
+            "มีความสุขมากๆนะ", // 1: 98611.jpg
+            "เค้ารักเธอมากๆๆ😘",
+            "สุขภาพร่างกายแข็งแรง", // 3: gram.png
+            "ไม่เจ็บไม่ป่วย",
+            "อยู่กับหมูตัวนี้ไปนานๆนะ🐷🐽", // 5: mhoo.png
+            "ขอให้ติดมหาลัยด้วยนะๆๆ", // 6: maharai.png
+            "แล้วก็ขอบคุณน้าที่อยู่กับเค้ามาจนครบ 1 เดือน", // 7: day.png
+            "ขอบคุณมากที่เธออยู่กับเค้าตลอด💞",
+            "ดีใจมากๆๆที่มีเธอในทุกวัน 💓",
+            "พิมพ์ไรอีกดี🤔🤔",
+            "อ่อๆๆๆๆ",
+            "ขอให้น่ารักกันแบบนี้ไปเรื่อยๆนะ 💖",
+            "รักที่สุดเลยน้า 💘", // 13: hug.png
+            "จุ้บๆ รักเธอน้าา💓💞💖", // 14: ku.jpg (ถาวร)
+            "หมดแล้ววว",
+            "กดออกได้เลย",
+            "ยังอยู่อีกๆ",
+            "ไม่มีไรแร้ววว",
+            "ออกเถอะะ",
+        ];
+        
+        // ลำดับของข้อความที่ต้องการให้มีรูปภาพ
+        const imageMap = {
+            0: "cake.png",
+            1: "98611.jpg",
+            3: "gram.png",
+            5: "mhoo.png",
+            6: "maharai.png",
+            7: "day.png",
+            13: "hug.png",
+            14: "ku.jpg" // รูปสุดท้ายที่ไม่หายไป
+        };
+
+        let i = 0;
+        function showNext() {
+            if (i >= texts.length) {
+                // ถ้าจบทุกข้อความแล้ว และรูปสุดท้ายไม่ใช่ ku.jpg ให้ซ่อน
+                if (mainImage.src.indexOf('ku.jpg') === -1) {
+                    mainImage.style.opacity = 0;
+                }
+                return;
+            }
+            
+            // ซ่อนรูปภาพก่อนเริ่มข้อความใหม่ (ยกเว้น ku.jpg)
+            if (i > 0 && imageMap[i-1] !== "ku.jpg") {
+                mainImage.style.opacity = 0; 
+            }
+            
+            message.innerHTML = texts[i];
+            message.style.opacity = 1;
+            
+            // จัดการการแสดงรูปภาพ
+            const currentImage = imageMap[i];
+            
+            if (currentImage) {
+                // ถ้าเป็นรูป ku.jpg ให้แสดงแล้วค้างไว้
+                if (currentImage === "ku.jpg") {
+                    changeImage(currentImage, true); // true = isPermanent
+                } else {
+                    // รูปภาพจะจางเข้า (Fade In)
+                    changeImage(currentImage);
+                }
+            } else {
+                // ถ้าไม่มีรูป ให้ซ่อนรูปปัจจุบันทันที (กรณีข้อความที่ i-1 มีรูป)
+                // แต่ถ้า i-1 คือ ku.jpg ก็ไม่ต้องทำอะไร
+                if (i > 0 && imageMap[i-1] !== "ku.jpg") {
+                    mainImage.style.opacity = 0; 
+                }
+            }
+
+
+            setTimeout(() => {
+                message.style.opacity = 0; // ซ่อนข้อความปัจจุบัน
+                
+                // ทำให้รูปภาพจางหายไป (Fade Out) หลังแสดงข้อความนี้ (ยกเว้น ku.jpg)
+                if (currentImage !== "ku.jpg") {
+                   mainImage.style.opacity = 0; 
+                }
+                
+                i++;
+                setTimeout(showNext, 1200); // รอ 1.2 วิ แล้วแสดงข้อความถัดไป
+            }, 2000); // แสดงข้อความแต่ละอัน 2 วินาที
+        }
+        
+        setTimeout(showNext, 1300); // เริ่มแสดงข้อความชุดแรก
+    };
+</script>
+
+</body>
+</html>
