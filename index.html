@@ -64,7 +64,7 @@
         height: 300px; 
         object-fit: contain;
         opacity: 0; /* ซ่อนไว้ในตอนแรก */
-        transition: opacity 0.5s ease-in-out; /* ลดเวลา transition เพื่อการเปลี่ยนที่เร็วขึ้น */
+        transition: opacity 0.5s ease-in-out; /* ลดเวลา transition เป็น 0.5s */
         z-index: 9; 
     }
 
@@ -101,6 +101,27 @@
     const bgm = document.getElementById("bgm");
     const mainImage = document.getElementById("mainImage");
 
+    // =======================================================
+    // ** 1. โค้ด PRELOAD รูปภาพและเพลง (แก้ไขปัญหาโหลดช้า) **
+    // =======================================================
+    function preloadImages(imageArray) {
+        imageArray.forEach((imagePath) => {
+            const img = new Image();
+            img.src = imagePath;
+        });
+    }
+
+    const allAssets = [
+        "cake.png", "98611.jpg", "gram.png", "mhoo.png", 
+        "maharai.png", "day.png", "hug.png", "ku.jpg",
+        "raoCOC.mp3" 
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        preloadImages(allAssets);
+    });
+    // =======================================================
+
     // ฟังก์ชันสร้าง Emoji ร่วง
     function spawnEmojis() {
         const emojis = ["💖","💗","💞","💕","💘","✨","🌸","💓","🐷","🌹","💐","🌷",];
@@ -116,17 +137,10 @@
         }
     }
     
-    /**
-     * จัดการการเปลี่ยนรูปภาพแบบ Fade Out/Fade In
-     * @param {string} src - ชื่อไฟล์รูปภาพใหม่
-     * @param {boolean} isPermanent - ถ้า true รูปจะไม่จางหายไป (ใช้สำหรับ ku.jpg)
-     */
+    // ฟังก์ชันจัดการการเปลี่ยนรูปภาพแบบ Fade In/Out
     function changeImage(src, isPermanent = false) {
-        // ถ้าไม่มี src หรือรูปภาพปัจจุบันคือรูปใหม่แล้ว (ป้องกันบั๊ก Fade ซ้ำซ้อน)
         if (!src || mainImage.src.endsWith(src)) {
-            if (!src) {
-                mainImage.style.opacity = 0;
-            }
+            if (!src) mainImage.style.opacity = 0;
             return;
         }
 
@@ -140,7 +154,6 @@
             mainImage.src = src;
             mainImage.style.opacity = 1;
 
-            // ถ้าเป็นรูปถาวร (ku.jpg) ให้คง opacity ไว้ 1
             if (isPermanent) {
                 mainImage.style.opacity = 1;
             }
@@ -191,22 +204,14 @@
             "ออกเถอะะ", // 19
         ];
         
-        // ลำดับของข้อความที่ต้องการให้มีรูปภาพ
         const imageMap = {
-            0: "cake.png",
-            1: "98611.jpg",
-            3: "gram.png",
-            5: "mhoo.png",
-            6: "maharai.png",
-            7: "day.png",
-            13: "hug.png",
-            14: "ku.jpg" // รูปสุดท้ายที่ไม่หายไป
+            0: "cake.png", 1: "98611.jpg", 3: "gram.png", 5: "mhoo.png", 
+            6: "maharai.png", 7: "day.png", 13: "hug.png", 14: "ku.jpg" 
         };
 
         let i = 0;
         function showNext() {
             if (i >= texts.length) {
-                // ถ้าจบทุกข้อความแล้ว และรูปสุดท้ายไม่ใช่ ku.jpg ให้ซ่อน
                 if (mainImage.src.indexOf('ku.jpg') === -1) {
                     mainImage.style.opacity = 0;
                 }
@@ -222,7 +227,7 @@
             // === การจัดการรูปภาพ Fade In ===
             if (currentImage) {
                 if (currentImage === "ku.jpg") {
-                    changeImage(currentImage, true); // true = isPermanent
+                    changeImage(currentImage, true); 
                 } else {
                     changeImage(currentImage);
                 }
@@ -240,11 +245,11 @@
                 }
                 
                 i++;
-                setTimeout(showNext, 1200); // รอ 1.2 วิ แล้วแสดงข้อความถัดไป
-            }, 2000); // แสดงข้อความแต่ละอัน 2 วินาที
+                setTimeout(showNext, 1200); 
+            }, 2000); 
         }
         
-        setTimeout(showNext, 1300); // เริ่มแสดงข้อความชุดแรก
+        setTimeout(showNext, 1300); 
     };
 </script>
 
